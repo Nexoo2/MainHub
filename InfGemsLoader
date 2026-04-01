@@ -173,7 +173,7 @@ for i = 1, 20 do
 			dot.BackgroundTransparency = 0.4
 
 			local tween = TweenService:Create(dot, TweenInfo.new(math.random(3,6)), {
-				Position = UDim2.news(math.random(),0,0,0),
+				Position = UDim2.new(math.random(),0,0,0),
 				BackgroundTransparency = 1
 			})
 
