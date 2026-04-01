@@ -257,59 +257,73 @@ AddParagraph(Rivals, {
 AddButton(Rivals, {
     Name = "Click here for the Sailor script!",
     Callback = function()
-        notify("Sailor Piece", "Button clicked!")
+        notify("Sailor Piece", "Loading GUI...")
+
         local player = game.Players.LocalPlayer
 
--- wait for leaderstats + bounty
-local leaderstats = player:WaitForChild("leaderstats")
-local bounty = leaderstats:WaitForChild("Bounty")
+        -- Remove old GUI if it exists
+        if player.PlayerGui:FindFirstChild("BountyGui") then
+            player.PlayerGui.BountyGui:Destroy()
+        end
 
--- GUI
-local gui = Instance.new("ScreenGui")
-gui.Name = "BountyGui"
-gui.ResetOnSpawn = false
-gui.Parent = player:WaitForChild("PlayerGui")
+        -- Wait safely for leaderstats
+        local leaderstats = player:FindFirstChild("leaderstats") or player:WaitForChild("leaderstats", 10)
+        if not leaderstats then
+            warn("leaderstats not found")
+            return
+        end
 
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 260, 0, 140)
-frame.Position = UDim2.new(0.5, -130, 0.5, -70)
-frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-frame.Parent = gui
-frame.Active = true
-frame.Draggable = true
+        local bounty = leaderstats:FindFirstChild("Bounty") or leaderstats:WaitForChild("Bounty", 10)
+        if not bounty then
+            warn("Bounty not found")
+            return
+        end
 
--- title
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 30)
-title.Text = "Bounty Changer"
-title.BackgroundColor3 = Color3.fromRGB(15,15,15)
-title.TextColor3 = Color3.new(1,1,1)
-title.Parent = frame
+        -- GUI
+        local gui = Instance.new("ScreenGui")
+        gui.Name = "BountyGui"
+        gui.ResetOnSpawn = false
+        gui.Parent = player:WaitForChild("PlayerGui")
 
--- textbox
-local box = Instance.new("TextBox")
-box.Position = UDim2.new(0, 10, 0, 50)
-box.Size = UDim2.new(1, -20, 0, 30)
-box.PlaceholderText = "Enter Bounty"
-box.BackgroundColor3 = Color3.fromRGB(45,45,45)
-box.TextColor3 = Color3.new(1,1,1)
-box.Parent = frame
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(0, 260, 0, 140)
+        frame.Position = UDim2.new(0.5, -130, 0.5, -70)
+        frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        frame.Parent = gui
+        frame.Active = true
+        frame.Draggable = true
 
--- button
-local button = Instance.new("TextButton")
-button.Position = UDim2.new(0, 10, 0, 90)
-button.Size = UDim2.new(1, -20, 0, 30)
-button.Text = "Set Bounty"
-button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-button.TextColor3 = Color3.new(1,1,1)
-button.Parent = frame
+        local title = Instance.new("TextLabel")
+        title.Size = UDim2.new(1, 0, 0, 30)
+        title.Text = "Bounty Changer"
+        title.BackgroundColor3 = Color3.fromRGB(15,15,15)
+        title.TextColor3 = Color3.new(1,1,1)
+        title.Parent = frame
 
--- logic
-button.MouseButton1Click:Connect(function()
-	local num = tonumber(box.Text)
-	if num then
-		bounty.Value = num
-	end
-end)
+        local box = Instance.new("TextBox")
+        box.Position = UDim2.new(0, 10, 0, 50)
+        box.Size = UDim2.new(1, -20, 0, 30)
+        box.PlaceholderText = "Enter Bounty"
+        box.BackgroundColor3 = Color3.fromRGB(45,45,45)
+        box.TextColor3 = Color3.new(1,1,1)
+        box.Parent = frame
+
+        local button = Instance.new("TextButton")
+        button.Position = UDim2.new(0, 10, 0, 90)
+        button.Size = UDim2.new(1, -20, 0, 30)
+        button.Text = "Set Bounty"
+        button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+        button.TextColor3 = Color3.new(1,1,1)
+        button.Parent = frame
+
+        button.MouseButton1Click:Connect(function()
+            local num = tonumber(box.Text)
+            if num then
+                bounty.Value = num
+                notify("Bounty", "Set to " .. num)
+            else
+                notify("Error", "Enter a valid number")
+            end
+        end)
     end
 })
