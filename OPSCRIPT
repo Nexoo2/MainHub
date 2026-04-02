@@ -1,0 +1,121 @@
+local VALID_KEY = "123"
+local GET_KEY_LINK = "https://discord.gg/hAHhBVCu4S"
+
+--// SERVICES
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local player = Players.LocalPlayer
+
+--// GUI SETUP
+local ScreenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+ScreenGui.Name = "RIVALS_WALLBANG_OP"
+
+-- Main Frame
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Size = UDim2.new(0, 320, 0, 180)
+Frame.Position = UDim2.new(0.5, -160, 0.5, -90)
+Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+Frame.BorderSizePixel = 0
+
+Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 10)
+
+-- Title
+local Title = Instance.new("TextLabel", Frame)
+Title.Text = "DELTA OP SCRIPT"
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundTransparency = 1
+Title.TextColor3 = Color3.fromRGB(255,255,255)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+
+-- Key Box
+local KeyBox = Instance.new("TextBox", Frame)
+KeyBox.PlaceholderText = "Enter Key..."
+KeyBox.Size = UDim2.new(0.8, 0, 0, 35)
+KeyBox.Position = UDim2.new(0.1, 0, 0.35, 0)
+KeyBox.BackgroundColor3 = Color3.fromRGB(30,30,35)
+KeyBox.TextColor3 = Color3.new(1,1,1)
+KeyBox.Font = Enum.Font.Gotham
+KeyBox.TextSize = 14
+Instance.new("UICorner", KeyBox).CornerRadius = UDim.new(0, 6)
+
+-- Check Button
+local CheckBtn = Instance.new("TextButton", Frame)
+CheckBtn.Text = "Check Key"
+CheckBtn.Size = UDim2.new(0.35, 0, 0, 30)
+CheckBtn.Position = UDim2.new(0.1, 0, 0.7, 0)
+CheckBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
+CheckBtn.TextColor3 = Color3.new(1,1,1)
+CheckBtn.Font = Enum.Font.GothamBold
+CheckBtn.TextSize = 14
+Instance.new("UICorner", CheckBtn).CornerRadius = UDim.new(0, 6)
+
+-- Get Key Button
+local GetKeyBtn = Instance.new("TextButton", Frame)
+GetKeyBtn.Text = "Get Key"
+GetKeyBtn.Size = UDim2.new(0.35, 0, 0, 30)
+GetKeyBtn.Position = UDim2.new(0.55, 0, 0.7, 0)
+GetKeyBtn.BackgroundColor3 = Color3.fromRGB(50,50,60)
+GetKeyBtn.TextColor3 = Color3.new(1,1,1)
+GetKeyBtn.Font = Enum.Font.GothamBold
+GetKeyBtn.TextSize = 14
+Instance.new("UICorner", GetKeyBtn).CornerRadius = UDim.new(0, 6)
+
+-- Notification
+local function Notify(text, color)
+    local notif = Instance.new("TextLabel", ScreenGui)
+    notif.Size = UDim2.new(0, 250, 0, 40)
+    notif.Position = UDim2.new(0.5, -125, 0.1, 0)
+    notif.BackgroundColor3 = color
+    notif.Text = text
+    notif.TextColor3 = Color3.new(1,1,1)
+    notif.Font = Enum.Font.GothamBold
+    notif.TextSize = 14
+    notif.BackgroundTransparency = 0.1
+    
+    Instance.new("UICorner", notif).CornerRadius = UDim.new(0, 8)
+
+    task.delay(2, function()
+        notif:Destroy()
+    end)
+end
+
+-- Key Check Logic
+CheckBtn.MouseButton1Click:Connect(function()
+    if KeyBox.Text == VALID_KEY then
+        Notify("Access Granted ✅", Color3.fromRGB(0,200,100))
+        Frame:Destroy()
+        
+        -- YOUR SCRIPT HERE
+        print("Key correct - load main script")
+    else
+        Notify("Invalid Key ❌", Color3.fromRGB(200,50,50))
+    end
+end)
+
+-- Get Key Logic
+GetKeyBtn.MouseButton1Click:Connect(function()
+    setclipboard(GET_KEY_LINK)
+    Notify("Link copied to clipboard 📋", Color3.fromRGB(0,170,255))
+end)
+
+--// LIVE EFFECT (SUBTLE FLOATING GLOW DOTS)
+for i = 1, 12 do
+    local dot = Instance.new("Frame", Frame)
+    dot.Size = UDim2.new(0, 4, 0, 4)
+    dot.BackgroundColor3 = Color3.fromRGB(0,170,255)
+    dot.BorderSizePixel = 0
+    dot.Position = UDim2.new(math.random(), 0, math.random(), 0)
+    dot.BackgroundTransparency = 0.4
+    Instance.new("UICorner", dot).CornerRadius = UDim.new(1,0)
+
+    task.spawn(function()
+        while dot.Parent do
+            local newPos = UDim2.new(math.random(), 0, math.random(), 0)
+            TweenService:Create(dot, TweenInfo.new(3, Enum.EasingStyle.Sine), {
+                Position = newPos
+            }):Play()
+            task.wait(3)
+        end
+    end)
+end
