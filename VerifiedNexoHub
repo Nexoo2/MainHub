@@ -1,4 +1,3 @@
----- The key system source is open, But the actual script source is secure, (PERSONALLY FOR U SKIDDERS - Nexo :0)
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
